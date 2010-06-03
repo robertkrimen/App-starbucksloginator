@@ -1,0 +1,6 @@
+TODO:
+    - Check for valid username and password:
+      Config::Identity->load_best( 'starbucks', [qw/ username password /] )
+
+0.0010 Wednesday June 02 20:40:36 PDT 20102:
+    - Initial release

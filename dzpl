@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+use Dzpl
+    name => 'App-starbucksloginator',
+    version => '0.0010',
+    author => 'Robert Krimen <robertkrimen@gmail.com>',
+    license => 'Perl5',
+    copyright => 'Robert Krimen',
+
+    require => q/
+        Config::Identity 0.0014
+        Getopt::Long
+        Getopt::Usaginator
+        WWW::Mechanize
+
+        [Test]
+        Test::Most
+    /,
+;
+
+{ plugin '@ROKR' }
+
