@@ -2,28 +2,18 @@ NAME
     App::starbucksloginator - Access the wireless at Starbucks (via AT&T)
 
 VERSION
-    version 0.0010
+    version 0.0011
 
 SYNOPSIS
         $ starbucksloginator
 
-        $ starbucksloginator --username alice --password hunter2
-
 DESCRIPTION
-        AT&T/Starbucks has an annoying login screen needed access their wireless. It is especially annoying since it has a habit of logging you out every so often (sometimes just after you logged in)
+        AT&T/Starbucks has an annoying connection screen needed access their wireless.
 
-        This is a commandline-based, no-hassle way to log in
+        This is a commandline-based, no-hassle way to connect
 
 USAGE
         Usage: starbucksloginator <options>
-
-            --username <username>   Your AT&T wireless username
-            --password <password>   The password for the above
-                                    Instead of supplying your identity on the
-                                    commandline, you can setup $HOME/.starbucks like so:
-        
-                                        username <username>
-                                        password <password>
 
             --agent <agent>         The agent to pass the loginator off as (user agent string).
                                     Windows Firefox by default

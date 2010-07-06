@@ -8,43 +8,24 @@ use warnings;
 
     $ starbucksloginator
 
-    $ starbucksloginator --username alice --password hunter2
-
 =head1 DESCRIPTION
 
-    AT&T/Starbucks has an annoying login screen needed access their wireless. It is especially annoying since it has a habit of logging you out every so often (sometimes just after you logged in)
+    AT&T/Starbucks has an annoying connection screen needed access their wireless.
 
-    This is a commandline-based, no-hassle way to log in
+    This is a commandline-based, no-hassle way to connect
     
 =head1 USAGE
 
     Usage: starbucksloginator <options>
-
-        --username <username>   Your AT&T wireless username
-        --password <password>   The password for the above
-                                Instead of supplying your identity on the
-                                commandline, you can setup $HOME/.starbucks like so:
-        
-                                    username <username>
-                                    password <password>
 
         --agent <agent>         The agent to pass the loginator off as (user agent string).
                                 Windows Firefox by default
 
 =cut
 
-use Config::Identity;
 use Getopt::Long qw/ GetOptions /;
 use Getopt::Usaginator <<_END_;
 Usage: starbucksloginator <options>
-
-    --username <username>   Your AT&T wireless username
-    --password <password>   The password for the above
-                            Instead of supplying your identity on the
-                            commandline, you can setup \$HOME/.starbucks like so:
-    
-                                username <username>
-                                password <password>
 
     --agent <agent>         The agent to pass the loginator off as (user agent string).
                             Windows Firefox by default
@@ -71,12 +52,10 @@ sub run {
     my $self = shift;
     my @arguments = @_;
     
-    my ( $help, $username, $password, $agent );
+    my ( $help, $agent );
     {
         local @ARGV = @arguments;
         GetOptions(
-            'username=s' => \$username,
-            'password=s' => \$password,
             'agent=s' => \$agent,
             'help|h|?' => \$help,
         );
@@ -84,13 +63,7 @@ sub run {
 
     usage 0 if $help;
 
-    my %identity = Config::Identity->try_best( 'starbucks' );
-    $username = $identity{username} unless defined $username;
-    $password = $identity{password} unless defined $password;
     agent->agent( $agent ) if defined $agent;
-
-    usage '! Missing username and/or password' unless
-        defined $username && defined $password;
 
     my ( $connected, $response );
     ( $connected, $response ) = $self->try_google;
@@ -103,20 +76,16 @@ sub run {
         say "Unable to connect to Google -- Attempting to login";
     }
 
-    if ( agent->form_name( 'MEMBERLOGIN' ) ) {
-        say "Attempting to authenticate as $username";
+    if ( agent->form_number( 1 ) ) {
+        say "Attempting to connect";
         $response = agent->submit_form( 
-            form_name => 'MEMBERLOGIN',
             fields => {
-                username => $username,
-                password => $password,
-                roamRealm => 'attwifi.com',
                 aupAgree => 1,
             },
         );
     }
     else {
-        say "Unable to find form MEMBERLOGIN -- Cancelling login";
+        say "Unable to find connect form -- Cancelling login";
         print $response->as_string;
         exit -1;
     }
