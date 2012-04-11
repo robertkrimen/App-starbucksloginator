@@ -44,6 +44,22 @@ sub try_google {
     return ( $success, $response );
 }
 
+sub try_reddit {
+    my $self = shift;
+    my $response = agent->get( 'http://reddit.com' );
+    my $success = $response->decoded_content =~ m/<title>[^<]*reddit:.*?</i;
+    return ( $success, $response );
+}
+
+sub try_to_get_out {
+    my $self = shift;
+    my ( $success, $response );
+    ( $success, $response ) = $self->try_google;
+    return ( $success, $response ) unless $success;
+    ( $success, $response ) = $self->try_reddit;
+    return ( $success, $response );
+}
+
 sub say { 
     print "> ", @_, "\n";
 }
@@ -66,7 +82,7 @@ sub run {
     agent->agent( $agent ) if defined $agent;
 
     my ( $connected, $response );
-    ( $connected, $response ) = $self->try_google;
+    ( $connected, $response ) = $self->try_to_get_out;
 
     if ( $connected ) { 
         say "It looks like you can already get out to Google -- Cancelling login";
