@@ -37,26 +37,21 @@ my $__agent__ = WWW::Mechanize->new;
 $__agent__->agent( "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.6) Gecko/2009011913 Firefox/3.0.6" );
 sub agent { $__agent__ }
 
-sub try_google {
+sub try {
     my $self = shift;
-    my $response = agent->get( 'http://google.com' );
-    my $success = $response->decoded_content =~ m/<title>[^<]*Google.*?</i;
-    return ( $success, $response );
-}
-
-sub try_reddit {
-    my $self = shift;
-    my $response = agent->get( 'http://reddit.com' );
-    my $success = $response->decoded_content =~ m/<title>[^<]*reddit:.*?</i;
+    my $site = shift;
+    my $response = agent->get( "http://$site" );
+    my $success = $response->decoded_content !~ m/<title>[^<]*Starbucks.*?</i;
     return ( $success, $response );
 }
 
 sub try_to_get_out {
     my $self = shift;
     my ( $success, $response );
-    ( $success, $response ) = $self->try_google;
-    return ( $success, $response ) unless $success;
-    ( $success, $response ) = $self->try_reddit;
+    for my $site ( qw/ google.com example.com bing.com yahoo.com / ) {
+        ( $success, $response ) = $self->try( $site );
+        return ( $success, $response ) unless $success;
+    }
     return ( $success, $response );
 }
 
@@ -85,11 +80,11 @@ sub run {
     ( $connected, $response ) = $self->try_to_get_out;
 
     if ( $connected ) { 
-        say "It looks like you can already get out to Google -- Cancelling login";
+        say "It looks like you can already get out -- Cancelling login";
         exit 0;
     }
     else {
-        say "Unable to connect to Google -- Attempting to login";
+        say "Unable to get out -- Attempting to login";
     }
 
     if ( agent->form_number( 1 ) ) {
@@ -106,14 +101,14 @@ sub run {
         exit -1;
     }
 
-    ( $connected ) = $self->try_google;
+    ( $connected ) = $self->try_to_get_out;
 
     if ( $connected ) {
-        say "Connected to Google -- Login successful";
+        say "Connected -- Login successful";
         exit 0;
     }
 
-    say "Unable to connect to Google -- Login failed";
+    say "Unable to get out -- Login failed";
     print $response->as_string;
     exit -1;
 }

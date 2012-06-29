@@ -2,7 +2,7 @@ NAME
     App::starbucksloginator - Access the wireless at Starbucks (via AT&T)
 
 VERSION
-    version 0.0011
+    version 0.0012
 
 SYNOPSIS
         $ starbucksloginator
@@ -19,10 +19,10 @@ USAGE
                                     Windows Firefox by default
 
 AUTHOR
-      Robert Krimen <robertkrimen@gmail.com>
+    Robert Krimen <robertkrimen@gmail.com>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2010 by Robert Krimen.
+    This software is copyright (c) 2012 by Robert Krimen.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
